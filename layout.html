@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+
+<head>
+{% block head %}
+
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
+<title>{% block title %}{% endblock %} Menu Project </title>
+{% endblock %}
+
+<style>
+body {background-color:white;}
+
+.edititem {color: blue;
+font-size: 16px;
+}
+
+.delete {color: red;
+font-size: 16px;
+}
+</style>
+
+<div class='container-fluid'>
+
+<body>
+
+<div id="content">
+
+{% block navigator %}{% endblock %}
+
+{% block editor %}{% endblock %}
+
+messages {% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul>
+{% for message in messages %}
+
+<li><strong> {{ message }} </strong></li>
+{% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
+
+</div>
+
+{% block menu %}{% endblock %}
+
+    <div id="footer">
+      {% block footer %}
+      &copy; Copyright 2010 by <a href="http://domain.invalid/">you</a>.
+      {% endblock %}
+    </div>
+  </body>
+</html>
