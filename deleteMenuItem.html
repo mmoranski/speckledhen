@@ -1,15 +1,14 @@
-<html>
+{% extends "layout.html" %}
 
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
 
+{% block content %}
 <body>
 <div class='container-fluid'>
 <div class="row">
 
 <h2 class='text-center col-md-2'> Are you sure you want to delete {{i.name}}? </h2>
 
-<div class="col-sm-2">
+<div class="col-md-2">
 </br></br>
 <form action="{{ url_for('deleteMenuItem',restaurant_id = restaurant_id, menu_id=menu_id)}}" method = 'post'>
 
@@ -21,10 +20,9 @@
 </form>
 <div class="col-sm-2">
 </br></br>
-<button class='btn btn-info btn-block'><a href = "{{ url_for('menu', restaurant_id = restaurant_id)}}">Cancel</button>
+<button class='btn btn-info btn-block'><a href = "{{ url_for('menu', restaurant_id = restaurant_id)}}">Cancel</button></a>
 </div>
 </div>
 </div>
 </body>
-
-</html>
+{% endblock %}

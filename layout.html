@@ -21,35 +21,52 @@ font-size: 16px;
 }
 </style>
 
-<div class='container-fluid'>
+
 
 <body>
 
-<div id="content">
+<div class="container-fluid">
+{% block navigator %}
+<div class="row">
+<div class="well">
+<a href = "{{ url_for('menu', restaurant_id = 1)}}">Brunch</a>
+<a href = "{{ url_for('menu', restaurant_id = 2)}}">Dinner</a>
 
-{% block navigator %}{% endblock %}
+</div>
+</div>
 
-{% block editor %}{% endblock %}
+{% endblock %}
 
-messages {% with messages = get_flashed_messages() %}
+<div id="messages" class="text-center">
+
+
+
+
+
+
+{% with messages = get_flashed_messages() %}
 {% if messages %}
-<ul>
+
 {% for message in messages %}
 
-<li><strong> {{ message }} </strong></li>
+<strong> {{ message }} </strong>
 {% endfor %}
-</ul>
+
 {% endif %}
 {% endwith %}
 
+</div>
+
+<div id="content">
+
+
+{% block content %}{% endblock %}
 
 </div>
 
-{% block menu %}{% endblock %}
-
-    <div id="footer">
+    <div id="footer" class="text-center">
       {% block footer %}
-      &copy; Copyright 2010 by <a href="http://domain.invalid/">you</a>.
+      Footer goes here
       {% endblock %}
     </div>
   </body>
