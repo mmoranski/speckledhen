@@ -32,6 +32,8 @@ def menu(restaurant_id):
 
 #%%
 
+# New Menu Item
+
 @app.route('/menus/<int:restaurant_id>/new/', methods=['GET','POST'])
 def newMenuItem(restaurant_id):
     if request.method == 'POST':
@@ -43,6 +45,8 @@ def newMenuItem(restaurant_id):
     else: 
         return render_template('newmenuitem.html', restaurant_id = restaurant_id)
 #%%
+
+# Change name of Menu Item
 
 @app.route('/menus/<int:restaurant_id>/<int:menu_id>/edit/', methods=['GET','POST'])
 def editMenuItem(restaurant_id, menu_id):
@@ -64,6 +68,8 @@ def editMenuItem(restaurant_id, menu_id):
         return render_template('editmenuitem.html', restaurant_id=restaurant_id, menu_id=menu_id, i=editedItem)
 #%%
 
+# Edit a price of a menu item
+
 @app.route('/menus/<int:restaurant_id>/<int:menu_id>/edit-price/', methods=['GET','POST'])
 def editPriceItem(restaurant_id, menu_id):
     PeditedItem = session.query(MenuItem).filter_by(id=menu_id).one()
@@ -79,6 +85,8 @@ def editPriceItem(restaurant_id, menu_id):
 
 #%%
 
+# Edit a descrption of menu item
+
 @app.route('/menus/<int:restaurant_id>/<int:menu_id>/edit-descr/', methods=['GET','POST'])
 def editDescrItem(restaurant_id, menu_id):
     DeditedItem = session.query(MenuItem).filter_by(id=menu_id).one()
@@ -93,6 +101,8 @@ def editDescrItem(restaurant_id, menu_id):
         return render_template('editDescritem.html', restaurant_id=restaurant_id, menu_id=menu_id, i=DeditedItem)
     
 #%%
+
+# Delete menu Item
 
 @app.route('/menus/<int:restaurant_id>/<int:menu_id>/delete/', methods=['GET','POST'])
 def deleteMenuItem(restaurant_id, menu_id):
