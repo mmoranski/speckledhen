@@ -4,118 +4,121 @@ Created on Tue Jul 25 15:10:15 2017
 
 @author: Moranski
 """
-from flask import Flask, render_template, url_for, request, redirect, flash
+from flask import Flask, session, render_template, url_for, request, redirect, flash
+from flask_mysqldb import MYSQL
+import MySQLdb.cursors
+import re
+
+
+
 app = Flask(__name__)
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from databasesetup import Base, Restaurant, MenuItem
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = '12+Agnusyuong1'
+app.config['MYSQL_DB'] = 'menudb'
 
-engine = create_engine('sqlite:///restaurantmenu.db')
-Base.metadata.bind = engine
+# Intialize MySQL
 
-DBSession = sessionmaker(bind = engine)
-session = DBSession()
+mysql = MySQL(app)
+
+
 
 #%%
 
 @app.route('/')
-@app.route('/menus/<int:restaurant_id>/')
+@app.route('/menus/<varchar:menu_id>/')
 
-def menu(restaurant_id):
-    menu = session.query(Restaurant).filter_by(id = restaurant_id).one()
-    items = session.query(MenuItem).filter_by(restaurant_id = restaurant_id)
+def menu(menu_id):
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT menu_id FROM restaurant WHERE id =%s' ('id'))
+    menu = cursor.fetchone()
+    cursor.close()
+    cursor.execute('SELECT * from menuitems WHERE menu_id =%s' ('menu'))
+    items = cursor.fetchone()
+    cursor.close()
+    items = session.query(menuitems).filter_by(menu_id = menu_id)
     return render_template('menu.html', menu = menu, items = items)
-
-
-    
 
 #%%
 
 # New Menu Item
 
-@app.route('/menus/<int:restaurant_id>/new/', methods=['GET','POST'])
-def newMenuItem(restaurant_id):
+@app.route('/menus/<int:menu_id>/new/', methods=['GET','POST'])
+def newMenuItem(menu_id):
     if request.method == 'POST':
-        newItem = MenuItem(name = request.form['name'], description = request.form['description'], course = request.form['course'], price = request.form['price'], restaurant_id = restaurant_id)
-        session.add(newItem)
-        session.commit()
-        flash("new menu item created!")
-        return redirect(url_for('menu', restaurant_id = restaurant_id))
+            name = request.form['name']
+            description = request.form['description']
+            course_id = request.form['course_id']
+            price = request.form['price']
+            menu_id = menu_id
+            
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT * FROM menuitems WHERE name =%s' ('name'))
+            account = cursor.fetchone()
+            if account:
+                flash("Item already exists!")
+            elif not 'name' or not 'price' or not 'description':
+                flash("Please fill out the form")
+            else:
+                cursor.execute('INSERT INTO menuitems VALUES (%s, %s, %s, %s, %s)', ('menu_id', 'course_id', 'price', 'name', 'description'))
+                mysql.connection.commit()
+
+                flash("new menu item created!")
+                return redirect(url_for('menu', menu_id = menu_id))   
     else: 
-        return render_template('newmenuitem.html', restaurant_id = restaurant_id)
+            return render_template('newmenuitem.html', menu_id = menu_id)
+        
 #%%
 
-# Change name of Menu Item
+# Change Menu Items
 
-@app.route('/menus/<int:restaurant_id>/<int:menu_id>/edit/', methods=['GET','POST'])
-def editMenuItem(restaurant_id, menu_id):
-    editedItem = session.query(MenuItem).filter_by(id=menu_id).one()
-    if request.method == 'POST':
-        if request.form['name']:
-            editedItem.name = request.form['name']
-        session.add(editedItem)
-        if request.form['price']:
-            editedItem.price = request.form['price']
-        session.add(editedItem)
-        if request.form['description']:
-            editedItem.description = request.form['description']
-        session.add(editedItem)
-        session.commit()
-        flash(editedItem.name + " changed")
-        return redirect(url_for('menu', restaurant_id=restaurant_id))
-    else: 
-        return render_template('editmenuitem.html', restaurant_id=restaurant_id, menu_id=menu_id, i=editedItem)
-#%%
-
-# Edit a price of a menu item
-
-@app.route('/menus/<int:restaurant_id>/<int:menu_id>/edit-price/', methods=['GET','POST'])
-def editPriceItem(restaurant_id, menu_id):
-    PeditedItem = session.query(MenuItem).filter_by(id=menu_id).one()
-    if request.method == 'POST':
-        if request.form['price']:
-            PeditedItem.price = request.form['price']
-        session.add(PeditedItem)
-        session.commit()
-        flash(PeditedItem.name + " price changed")
-        return redirect(url_for('menu', restaurant_id=restaurant_id))
-    else: 
-        return render_template('editpriceitem.html', restaurant_id=restaurant_id, menu_id=menu_id, i=PeditedItem)
-
-#%%
-
-# Edit a descrption of menu item
-
-@app.route('/menus/<int:restaurant_id>/<int:menu_id>/edit-descr/', methods=['GET','POST'])
-def editDescrItem(restaurant_id, menu_id):
-    DeditedItem = session.query(MenuItem).filter_by(id=menu_id).one()
-    if request.method == 'POST':
-        if request.form['description']:
-            DeditedItem.description = request.form['description']
-        session.add(DeditedItem)
-        session.commit()
-        flash(DeditedItem.name + " description changed")
-        return redirect(url_for('menu', restaurant_id=restaurant_id))
-    else: 
-        return render_template('editDescritem.html', restaurant_id=restaurant_id, menu_id=menu_id, i=DeditedItem)
+@app.route('/menus/<int:menu_id>/<varchar:name>/edit/', methods=['GET','POST'])
+def editMenuItem(menu_id, name):
+# Gets info from the form
+    try:
+        name = request.form['name']
+        description = request.form['description']
+        price = request.form['price']
+        course_id = request.form['course_id']
     
+        if request.method == 'POST': 
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            # If nots force data entry
+            if not 'name' or not 'price' or not 'description' or not 'course_id':
+                    flash("Please fill out the form")
+            # Updates the database with form data
+            else:
+                cursor.execute("""
+                       UPDATE menuitems 
+                       SET name=%s, description=%s, course_id=%s, price=%s
+                       WHERE name =%s""",
+                       ('name', 'description', 'course_id', 'price'))
+                flash(cursor.name + " changed")
+                mysql.connection.commit()
+                cursor.close()
+                # redirects to menu page
+                return redirect(url_for('menu', menu_id=menu_id))
+        
+        else: 
+            return render_template('editmenuitem.html', menu_id=menu_id, name=name, i=editedItem)
+        
 #%%
-
-# Delete menu Item
-
-@app.route('/menus/<int:restaurant_id>/<int:menu_id>/delete/', methods=['GET','POST'])
-def deleteMenuItem(restaurant_id, menu_id):
-    itemToDelete = session.query(MenuItem).filter_by(id=menu_id).one()
+# Delete menu Item          
+@app.route('/menus/<int:restaurant_id>/<varchar:name>/delete/', methods=['GET','POST'])
+def deleteMenuItem(name, menu_id):
     if request.method == 'POST':
-        session.delete(itemToDelete)
-        session.commit()
-        flash("item deleted")
-        return redirect(url_for('menu', restaurant_id=restaurant_id))
+        delete = mysql.connect()
+        cursor = delete.cursor()
+        cursor.execute("DELETE FROM menuitems WHERE name=%s", (name, menu_id))
+        delete.commit()
+        flash('Item deleted successfully!')
+        cursor.close()
+        delete.close()
+        return redirect(url_for('menu', menu_id=menu_id))
     else: 
-        return render_template('deletemenuitem.html', restaurant_id=restaurant_id, menu_id=menu_id, i=itemToDelete)
+        return render_template('deletemenuitem.html', menu_id=menu_id, name=name, i=itemToDelete)
 
-    return "Delete Item Page"
 #%%
 
 if __name__== '__main__':
