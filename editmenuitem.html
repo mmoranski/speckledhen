@@ -17,7 +17,7 @@
 </div>
 </div>
 
-<form action="{{ url_for('editMenuItem', restaurant_id=restaurant_id, menu_id=i.id)}}" method = 'post'>
+<form action="{{ url_for('editItem', menu_ID=menu_ID, item=item_ID)}}" method = 'post'>
 
 <div class="row">
 
@@ -28,7 +28,7 @@
 <p>Name:
 </div>
 <div class="col-sm-2">
-<input type='text' size='30' name='name' placeholder='{{i.name}}'>
+<input type='text' size='30' name='name' placeholder='{{name}}'>
 </p>
 </div>
 </div>
@@ -42,7 +42,7 @@
 <p>Price:
 </div>
 <div class="col-sm-2">
-<input type='text' size='30' name='price' placeholder='{{i.price}}'>
+<input type='text' size='30' name='price' placeholder='{{price}}'>
 </p>
 </div>
 </div>
@@ -56,11 +56,20 @@
 <p>Description:
 </div>
 <div class="col-sm-2">
-<input type='text' size='30' name='description' placeholder='{{i.description}}'>
+<input type='text' size='30' name='description' placeholder='{{description}}'>
 </p>
 </div>
 </div>
 
+<div class="col-sm-2">
+<p>Course ID:
+</div>
+<div class="col-sm-2">
+<input type='text' size='30' name='course_id' placeholder='{{course_id}}'>
+</p>
+</div>
+</div>
+</div>
 <div class="row">
 
 <div class="col-sm-4">
@@ -71,7 +80,7 @@
 </div>
 
 <div class="col-sm-2">
-<button class='btn btn-info btn-block'><a href = "{{ url_for('menu', restaurant_id = restaurant_id)}}">Cancel</a></button>
+<button class='btn btn-info btn-block'><a href = "{{ url_for('users')}}">Cancel</a></button>
 </div>
 </div>
 

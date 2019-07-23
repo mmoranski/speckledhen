@@ -29,8 +29,13 @@ font-size: 16px;
 {% block navigator %}
 <div class="row">
 <div class="well">
-<a href = "{{ url_for('menu', restaurant_id = 1)}}">Brunch</a>
-<a href = "{{ url_for('menu', restaurant_id = 2)}}">Dinner</a>
+
+<!-- Selects which menu to use. Menu_id refers to the row of the database containing said menu. -->
+
+
+<a href = "{{ url_for('menu')}}">Menu</a>
+<a href = "{{ url_for('menu')}}">Dinner</a>
+
 
 </div>
 </div>

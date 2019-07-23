@@ -4,10 +4,18 @@
 
 <body>
 
+{% extends "layout.html" %}
+{% block content %}
+
 <h1>New Menu Item</h1>
 
 
-<form action="{{ url_for('newMenuItem', restaurant_id=restaurant_id)}}" method = 'post'>
+<form action="{{ url_for('NewItem') }}" method="POST">
+
+<p>MenuID:
+</br>
+<input type='text' size='30' name='menu_id'>
+</p>
 
 <p>Name:
 </br>
@@ -21,7 +29,7 @@
 
 <p>Course:
 </br>
-<input type='text' size='30' name='course'>
+<input type='text' size='30' name='course_id'>
 </p>
 
 <p>Description:
@@ -33,6 +41,7 @@
 
 </form>
 
-</body>
+{% endblock %}
 
+</body>
 </html>
