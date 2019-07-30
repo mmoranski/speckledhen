@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+
+{% block content %}
+
+<h2 class='text-primary text-center'>
+
+<!-- Remove Comment tags {{menu.name}}--> 
+
+Menu Name</h2>
+<div class='text-primary text-center'>
+
+
+
+</br>
+
+
+</br>
+
+<!-- '''Remove comments when DB up <a href='{{url_for('newMenuItem', restaurant_id=menu.id)}}'><button class='btn btn-info'><i class="fa fa-plus">  New Item</i></button></a>
+ -->
+
+<a href='{{url_for('newMenuItem')}}'><button class='btn btn-info'><i class="fa fa-plus">  New Item</i></button></a>
+
+</br>
+
+<!-- {% for i in items %} -->
+
+List of Items
+
+</br>
+
+<!-- Remove comments when up {{i.name}} <a href='{{url_for('editMenuItem', restaurant_id=menu.id, menu_id=i.id ) }}' class='edititem'><i class="fa fa-wrench"></i></a>
+<a href='{{url_for('deleteMenuItem', restaurant_id=menu.id, menu_id=i.id ) }}' class='delete'><i class="fa fa-trash"></i></a>
+
+</br>
+{{i.description}} 
+</br>
+{{i.price}} 
+</br>
+</br>
+-->
+
+
+{% endfor %}
+</div>
+
+{% endblock %}

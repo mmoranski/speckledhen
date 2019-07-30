@@ -1,0 +1,27 @@
+<html>
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+
+<body>
+
+{% extends "layout.html" %}
+{% block content %}
+
+<h1>New Menu</h1>
+
+
+<form action="{{ url_for('NewMenu') }}" method="POST">
+
+<p>Menu Name:
+</br>
+<input type='text' size='30' name='menu_id'>
+</p>
+
+<input type='submit' value='Create'>
+
+</form>
+
+{% endblock %}
+
+</body>
+</html>

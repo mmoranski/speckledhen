@@ -1,0 +1,5 @@
+	cur = mysql.connection.cursor()
+	cur.execute('''INSERT INTO menuitems VALUES (%s, %s, %s, %s, %s), ('menu_ID', 'course_id', 'price', 'name', 'description')''') 
+	mysql.connection.commit()
+	rv = cur.fetchall()
+    	return str(rv)

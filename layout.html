@@ -33,8 +33,8 @@ font-size: 16px;
 <!-- Selects which menu to use. Menu_id refers to the row of the database containing said menu. -->
 
 
-<a href = "{{ url_for('menu')}}">Menu</a>
-<a href = "{{ url_for('menu')}}">Dinner</a>
+<a href = "{{ url_for('menu', menu_ID='Brunch')}}">Brunch</a>
+<a href = "{{ url_for('menu', menu_ID='Dinner')}}">Dinner</a>
 
 
 </div>

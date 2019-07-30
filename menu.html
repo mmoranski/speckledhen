@@ -12,12 +12,20 @@
 
 
 </br>
-<a href='{{url_for('NewItem')}}'><button class='btn btn-info'><i class="fa fa-plus">  New Item</i></button></a>
+<a href='{{url_for('NewItem', menu_ID=menu_ID)}}'><button class='btn btn-info'><i class="fa fa-plus">  New Item</i></button></a>
 
 </br>
-{% for col in data %}
+{% for row in data %}
+    
+        <li>{{ row.name }}...{{ row.price }}...<a href='{{url_for('editItem', menu_ID=row.menu_ID, item=row.item_ID) }}' class='edititem'><i class="fa fa-wrench"></i></a></li>
+{{ row.description }} 
+</br>    
+</br>
+        
+    
+{% else %}
+Nothing to see here
 
-{{ (data) }}
 {% endfor %}
 </br>
 

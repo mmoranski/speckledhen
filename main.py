@@ -30,21 +30,26 @@ def users():
     return str(rv)
 
 
-@app.route("/menu.html")
-def menu():
-    cur = mysql.connection.cursor()
-    cur.execute('''SELECT * FROM menuitems''')
+@app.route("/<menu_ID>/menu.html")
+def menu(menu_ID):
+    cur = mysql.connection.cursor()   
+    cur.execute('''SELECT * FROM menuitems WHERE menu_ID=(%s)''', (menu_ID,))
     mysql.connection.commit()
     data = cur.fetchall()
-    return render_template("menu.html", data=data)
+    return render_template("menu.html", menu_ID=menu_ID, data=data)
 
 # Adds item to database. Need to update newmenuitem.html to have drop down menu for menu_id and course. 
 # Course and menu_ID lists should be populated by the database
     
-@app.route("/newMenuitem.html", methods=['GET', 'POST'])
-def NewItem():
+@app.route("/<menu_ID>/newMenuitem.html", methods=['GET', 'POST'])
+def NewItem(menu_ID):
+    cur = mysql.connection.cursor()
+    cur.execute('''SELECT * FROM restaurant''')
+    data = cur.fetchall()
+    mysql.connection.commit() 
+    
     if request.method == 'POST':
-        menu_ID= request.form['menu_id']
+        menu_ID=menu_ID
         name = request.form['name']
         description = request.form['description']
         course_id = request.form['course_id']
@@ -52,14 +57,30 @@ def NewItem():
         cur = mysql.connection.cursor()
         cur.execute("INSERT INTO menuitems (menu_id, course_id, price, name, description) VALUES (%s, %s, %s, %s, %s)", (menu_ID, course_id, price, name, description))
         mysql.connection.commit()
-        return redirect(url_for('users'))    
+        return redirect(url_for('menu', menu_ID=menu_ID))    
     else:
-        return render_template("newMenuitem.html")
+        return render_template("newMenuitem.html", menu_ID=menu_ID, data=data)
+
+@app.route("/newMenu.html", methods=['GET', 'POST'])
+def NewMenu():
+    if request.method == 'POST':
+        menu_ID = request.form['menu_id']
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO restaurant (menu_id) VALUES (%s)", (menu_ID,))
+        mysql.connection.commit()
+        return redirect(url_for('menu', menu_ID=menu_ID))    
+    else:
+        return render_template("newMenu.html")
 
 @app.route("/<menu_ID>/<item>/editmenuitem.html", methods=['GET', 'POST'])
 # <item> is what editItem will use as item, same goes for menu_ID. 
 def editItem(menu_ID, item):
     #Edit item with the given name, identified by unique item_ID called item.
+    cur = mysql.connection.cursor()
+    cur.execute('''SELECT * FROM menuitems WHERE item_ID=(%s)''', (item,))
+    data = cur.fetchall()
+    mysql.connection.commit()    
+
     if request.method == 'POST':     
         name = request.form['name']
         description = request.form['description']
@@ -68,9 +89,10 @@ def editItem(menu_ID, item):
         cur = mysql.connection.cursor()
         cur.execute("UPDATE menuitems SET name=%s, description=%s, course_id=%s, price=%s WHERE item_ID=%s", (name, description, course_id, price, item))
         mysql.connection.commit()
-        return redirect(url_for('users'))    
+        return redirect(url_for('menu', menu_ID=menu_ID))    
+    
     else:
-        return render_template("editmenuitem.html", menu_ID=menu_ID, item_ID=item)
+        return render_template("editmenuitem.html", data=data, menu_ID=menu_ID, item_ID=item)
 
 @app.route("/deleteMenuitem.html")
 def deleteItem():

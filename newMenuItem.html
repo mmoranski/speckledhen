@@ -10,11 +10,8 @@
 <h1>New Menu Item</h1>
 
 
-<form action="{{ url_for('NewItem') }}" method="POST">
+<form action="{{ url_for('NewItem', menu_ID=menu_ID) }}" method="POST">
 
-<p>MenuID:
-</br>
-<input type='text' size='30' name='menu_id'>
 </p>
 
 <p>Name:
@@ -29,12 +26,16 @@
 
 <p>Course:
 </br>
-<input type='text' size='30' name='course_id'>
+<select size='1' name='course_id'>
+<option value="Appetizer">Appetizer</option>
+<option value="Entree">Entree</option>
+<option value="Dessert">Dessert</option>
+</select> 
 </p>
 
 <p>Description:
 </br>
-<input type='text' size='30' name='description'>
+<textarea name='description' rows="2" cols="31">Item Description</textarea>
 </p>
 
 <input type='submit' value='Create'>

@@ -17,32 +17,36 @@
 </div>
 </div>
 
-<form action="{{ url_for('editItem', menu_ID=menu_ID, item=item_ID)}}" method = 'post'>
+<form action="{{ url_for('editItem', data=data, menu_ID=menu_ID, item=item_ID)}}" method = 'post'>
 
 <div class="row">
 
 <div class="col-sm-4">
 </div>
 
+
+{% for row in data %}
 <div class="col-sm-2">
 <p>Name:
 </div>
 <div class="col-sm-2">
-<input type='text' size='30' name='name' placeholder='{{name}}'>
+<input type='text' size='30' name='name' value={{ row.name }}>
 </p>
 </div>
 </div>
+
 
 <div class="row">
 
 <div class="col-sm-4">
 </div>
+
 
 <div class="col-sm-2">
 <p>Price:
 </div>
 <div class="col-sm-2">
-<input type='text' size='30' name='price' placeholder='{{price}}'>
+<input type='text' size='30' name='price' value={{ row.price }}>
 </p>
 </div>
 </div>
@@ -56,16 +60,27 @@
 <p>Description:
 </div>
 <div class="col-sm-2">
-<input type='text' size='30' name='description' placeholder='{{description}}'>
+<textarea name='description' rows="2" cols="31">{{ row.description }}</textarea>
 </p>
 </div>
+</div>
+
+<div class="row">
+
+<div class="col-sm-4">
 </div>
 
 <div class="col-sm-2">
 <p>Course ID:
 </div>
 <div class="col-sm-2">
-<input type='text' size='30' name='course_id' placeholder='{{course_id}}'>
+<select size='1' name='course_id'>
+<option value={{ row.course_id }} selected> {{ row.course_id }} </option>
+<option value="Appetizer">Appetizer</option>
+<option value="Entree">Entree</option>
+<option value="Dessert">Dessert</option>
+</select> 
+
 </p>
 </div>
 </div>
@@ -74,13 +89,15 @@
 
 <div class="col-sm-4">
 </div>
-
+{% endfor %}
 <div class="col-sm-2">
 <input type='submit' value='Edit'class='btn btn-block btn-primary'>
 </div>
 
+
+
 <div class="col-sm-2">
-<button class='btn btn-info btn-block'><a href = "{{ url_for('users')}}">Cancel</a></button>
+<button class='btn btn-info btn-block'><a href = "{{ url_for('menu', menu_ID=menu_ID)}}">Cancel</a></button>
 </div>
 </div>
 
@@ -89,6 +106,8 @@
 </div>
 
 </form>
+
+
 
 {% endblock %}
 
