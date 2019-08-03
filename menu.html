@@ -17,7 +17,17 @@
 </br>
 {% for row in data %}
     
-        <li>{{ row.name }}...{{ row.price }}...<a href='{{url_for('editItem', menu_ID=row.menu_ID, item=row.item_ID) }}' class='edititem'><i class="fa fa-wrench"></i></a></li>
+<li>
+{{ row.name }}...{{ row.price }}...<a href='{{url_for('editItem', menu_ID=row.menu_ID, item=row.item_ID) }}' class='edititem'><i class="fa fa-wrench"></i></a>
+
+
+
+
+<a href='{{url_for('deleteItem', menu_ID=row.menu_ID, item=row.item_ID ) }}' class='delete'><i class="fa fa-trash">
+</i>
+</a>
+
+</li>
 {{ row.description }} 
 </br>    
 </br>

@@ -94,9 +94,19 @@ def editItem(menu_ID, item):
     else:
         return render_template("editmenuitem.html", data=data, menu_ID=menu_ID, item_ID=item)
 
-@app.route("/deleteMenuitem.html")
-def deleteItem():
-    return render_template("deleteMenuItem.html")
+@app.route("/<menu_ID>/<item>/deleteMenuitem.html", methods=['GET', 'POST'])
+def deleteItem(menu_ID, item):
+    cur = mysql.connection.cursor()
+    cur.execute('''SELECT name FROM menuitems WHERE item_ID=(%s)''', (item,))
+    data = cur.fetchall()
+    mysql.connection.commit()   
+    if request.method == 'POST':
+         cur = mysql.connection.cursor()
+         cur.execute(''' DELETE FROM menuitems WHERE item_ID=(%s)''', (item,))
+         mysql.connection.commit()
+         return redirect(url_for('menu', menu_ID=menu_ID))  
+    else:
+        return render_template("deleteMenuItem.html", data=data, menu_ID=menu_ID, item_ID=item)
     
 if __name__ == "__main__":
     app.run(debug=True)
