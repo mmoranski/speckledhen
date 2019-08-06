@@ -18,19 +18,171 @@
 {% for row in data %}
     
 <li>
-{{ row.name }}...{{ row.price }}...<a href='{{url_for('editItem', menu_ID=row.menu_ID, item=row.item_ID) }}' class='edititem'><i class="fa fa-wrench"></i></a>
+{{ row.name }}...{{ row.price }}...<i class='edititem'><a href="#editItem{{row.item_ID}}" data-toggle="modal"><i class="fa fa-wrench"></i></a></i>
+
+
+ <!-- Modal -->
+<div class="modal fade" tabindex="-1" id="editItem{{row.item_ID}}" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Edit Item</h4>
+        </div>
+        <div class="modal-body">
+          	<div class='container-fluid'>	
+			<p>
+				<div class="row">
+					<div class="col-sm-2">
+
+
+<form method='post' action='{{url_for('editItem', menu_ID=row.menu_ID, item=row.item_ID ) }}'>
+
+<p>Name:
+</div>
+<div class="col-sm-2">
+<input type='text' size='30' name='name' value={{ row.name }}>
+</p>
+</div>
+</div>
+
+
+<div class="row">
+
+<div class="col-sm-4">
+</div>
+
+
+<div class="col-sm-2">
+<p>Price:
+</div>
+<div class="col-sm-2">
+<input type='text' size='30' name='price' value={{ row.price }}>
+</p>
+</div>
+</div>
+
+<div class="row">
+
+<div class="col-sm-4">
+</div>
+
+<div class="col-sm-2">
+<p>Description:
+</div>
+<div class="col-sm-2">
+<textarea name='description' rows="2" cols="31">{{ row.description }}</textarea>
+</p>
+</div>
+</div>
+
+<div class="row">
+
+<div class="col-sm-4">
+</div>
+
+<div class="col-sm-2">
+<p>Course ID:
+</div>
+<div class="col-sm-2">
+<select size='1' name='course_id'>
+<option value={{ row.course_id }} selected> {{ row.course_id }} </option>
+<option value="Appetizer">Appetizer</option>
+<option value="Entree">Entree</option>
+<option value="Dessert">Dessert</option>
+</select> 
+
+</p>
+</div>
+</div>
+</div>
+<div class="row">
+
+<div class="col-sm-4">
+</div>
+<div class="col-sm-2">
 
 
 
 
-<a href='{{url_for('deleteItem', menu_ID=row.menu_ID, item=row.item_ID ) }}' class='delete'><i class="fa fa-trash">
-</i>
-</a>
+
+						<div class="col-md-2">
+						</div>
+					</br>
+					</br>
+				</div>
+		</div>
+	</div>
+</p>
+        
+	<div class="modal-footer">
+		<div class="col-md-4">
+			
+			<input type='submit', value ='Edit' class='btn btn-block btn-primary'>
+			</form>
+		</div>
+        	
+		<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+		</div>
+	</div>
+</div>      
+</div>
+
+<!-- <a href='{{url_for('editItem', menu_ID=row.menu_ID, item=row.item_ID) }}' class='edititem'> -->
+
+
+
+
+<a href="#deleteItem{{row.item_ID}}" class='delete' data-toggle="modal"><i class="fa fa-trash"></i></a>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteItem{{row.item_ID}}" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Delete Item</h4>
+        </div>
+        <div class="modal-body">
+          	<div class='container-fluid'>	
+			<p>
+				<div class="row">
+					<h4 class='text-center'> Are you sure you want to delete {{row.name}}? </h4>
+						<div class="col-md-2">
+						</div>
+					</br>
+					</br>
+				</div>
+		</div>
+	</div>
+</p>
+        
+	<div class="modal-footer">
+		<div class="col-md-4">
+			<form method='post' action='{{url_for('deleteThing', menu_ID=row.menu_ID, item=row.item_ID ) }}'>
+			<input type='submit', value ='Delete' class='btn btn-block btn-danger'>
+			</form>
+		</div>
+		<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+	</div>
+</div>      
+</div>
+</div>
+
+
 
 </li>
 {{ row.description }} 
 </br>    
 </br>
+
+
+
+
         
     
 {% else %}
@@ -38,7 +190,6 @@ Nothing to see here
 
 {% endfor %}
 </br>
-
 
 
 

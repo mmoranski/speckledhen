@@ -20,9 +20,7 @@ mysql = MySQL(app)
 @app.route('/')
 def users():
     cur = mysql.connection.cursor()
-    
     #cur.execute('''INSERT INTO menuitems VALUES (3, 4, '$6', 'test', 'Describing things')''')
-    
     #following line prints menuitems table in the root directory
     cur.execute('''SELECT * FROM menuitems''')
     mysql.connection.commit()
@@ -30,17 +28,17 @@ def users():
     return str(rv)
 
 
-@app.route("/<menu_ID>/menu.html")
+@app.route("/<menu_ID>/menu.html", methods=['GET', 'POST'])
 def menu(menu_ID):
     cur = mysql.connection.cursor()   
     cur.execute('''SELECT * FROM menuitems WHERE menu_ID=(%s)''', (menu_ID,))
     mysql.connection.commit()
     data = cur.fetchall()
-    return render_template("menu.html", menu_ID=menu_ID, data=data)
 
-# Adds item to database. Need to update newmenuitem.html to have drop down menu for menu_id and course. 
-# Course and menu_ID lists should be populated by the database
+    return render_template("menu.html", menu_ID=menu_ID, data=data)
     
+
+# Course and menu_ID lists should be populated by the database  
 @app.route("/<menu_ID>/newMenuitem.html", methods=['GET', 'POST'])
 def NewItem(menu_ID):
     cur = mysql.connection.cursor()
@@ -62,6 +60,7 @@ def NewItem(menu_ID):
         return render_template("newMenuitem.html", menu_ID=menu_ID, data=data)
 
 @app.route("/newMenu.html", methods=['GET', 'POST'])
+# Creates a new menu (Brunch,Lunch, etc)
 def NewMenu():
     if request.method == 'POST':
         menu_ID = request.form['menu_id']
@@ -72,15 +71,9 @@ def NewMenu():
     else:
         return render_template("newMenu.html")
 
-@app.route("/<menu_ID>/<item>/editmenuitem.html", methods=['GET', 'POST'])
-# <item> is what editItem will use as item, same goes for menu_ID. 
+@app.route("/<menu_ID>/<item>/editmenuitem.html", methods=['POST'])
+# Previously had an edit html page. App now uses a modal window and menu.html only accesses editItem.
 def editItem(menu_ID, item):
-    #Edit item with the given name, identified by unique item_ID called item.
-    cur = mysql.connection.cursor()
-    cur.execute('''SELECT * FROM menuitems WHERE item_ID=(%s)''', (item,))
-    data = cur.fetchall()
-    mysql.connection.commit()    
-
     if request.method == 'POST':     
         name = request.form['name']
         description = request.form['description']
@@ -90,23 +83,16 @@ def editItem(menu_ID, item):
         cur.execute("UPDATE menuitems SET name=%s, description=%s, course_id=%s, price=%s WHERE item_ID=%s", (name, description, course_id, price, item))
         mysql.connection.commit()
         return redirect(url_for('menu', menu_ID=menu_ID))    
-    
-    else:
-        return render_template("editmenuitem.html", data=data, menu_ID=menu_ID, item_ID=item)
-
-@app.route("/<menu_ID>/<item>/deleteMenuitem.html", methods=['GET', 'POST'])
-def deleteItem(menu_ID, item):
-    cur = mysql.connection.cursor()
-    cur.execute('''SELECT name FROM menuitems WHERE item_ID=(%s)''', (item,))
-    data = cur.fetchall()
-    mysql.connection.commit()   
+ 
+@app.route("/<menu_ID>/<item>/deleteThing.html", methods=['POST'])
+# Previously had a get & post html delete page, app now uses a modal window in menu.html and only utilizes post method.
+def deleteThing(menu_ID, item):    
     if request.method == 'POST':
          cur = mysql.connection.cursor()
          cur.execute(''' DELETE FROM menuitems WHERE item_ID=(%s)''', (item,))
          mysql.connection.commit()
          return redirect(url_for('menu', menu_ID=menu_ID))  
-    else:
-        return render_template("deleteMenuItem.html", data=data, menu_ID=menu_ID, item_ID=item)
     
+ 
 if __name__ == "__main__":
     app.run(debug=True)
