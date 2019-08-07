@@ -29,7 +29,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Edit Item</h4>
+          <h4 class="modal-title">Edit {{ row.name }}</h4>
         </div>
         <div class="modal-body">
           	<div class='container-fluid'>	
@@ -40,8 +40,18 @@
 
 <form method='post' action='{{url_for('editItem', menu_ID=row.menu_ID, item=row.item_ID ) }}'>
 
+
+<div class="row">
+
+<div class="col-sm-4">
+</div>
+
+
+
+<div class="col-sm-2">
 <p>Name:
 </div>
+</br>
 <div class="col-sm-2">
 <input type='text' size='30' name='name' value={{ row.name }}>
 </p>
@@ -58,6 +68,7 @@
 <div class="col-sm-2">
 <p>Price:
 </div>
+</br>
 <div class="col-sm-2">
 <input type='text' size='30' name='price' value={{ row.price }}>
 </p>
@@ -72,6 +83,7 @@
 <div class="col-sm-2">
 <p>Description:
 </div>
+</br>
 <div class="col-sm-2">
 <textarea name='description' rows="2" cols="31">{{ row.description }}</textarea>
 </p>
@@ -84,8 +96,9 @@
 </div>
 
 <div class="col-sm-2">
-<p>Course ID:
+<p>Course:
 </div>
+</br>
 <div class="col-sm-2">
 <select size='1' name='course_id'>
 <option value={{ row.course_id }} selected> {{ row.course_id }} </option>
@@ -103,6 +116,8 @@
 <div class="col-sm-4">
 </div>
 <div class="col-sm-2">
+</div>
+</div>
 
 
 
